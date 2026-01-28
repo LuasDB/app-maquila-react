@@ -1,27 +1,49 @@
-import { createContext, useContext, useState, useMemo } from 'react'
+import { createContext, useContext, useState, useMemo, useEffect } from 'react'
+import authService from '@/services/authService'
+import { getUser } from '@/utils/storage'
 
 const AuthContext = createContext(null)
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState({
-        name: 'Usuario Demo',
-        rol: 'admin',
-        isAuthenticated: true,
-    })
+    const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    const login = userData => {
-        setUser({ ...userData, isAuthenticated: true })
+    useEffect(()=>{
+        const storedUser = getUser()
+        console.log(storedUser)
+        if(storedUser){
+        setUser(storedUser)
+        }
+        setLoading(false)
+    },[])
+
+    const login =async(email,password)=>{
+        try {
+            const response = await authService.login(email,password)
+            setUser(response.user)
+            return response.user
+        } catch (error) {
+            const message = error.response?.data?.message || 'Error al iniciar sesión'
+            throw new Error(message)
+        }
+    }
+    const logout = ()=>{
+        authService.logout()
+        setUser(null)
     }
 
-    const logout = () => {
-        setUser(prev => ({ ...prev, isAuthenticated: false }))
-    }
+    const value = useMemo(() => ({
+            login,
+            logout,
+            user,
+            loading,
+            isAuthenticated: !!user
+        }), [user, loading])
 
-    const value = useMemo(() => ({ user, login, logout }), [user])
 
     return (
         <AuthContext.Provider value={value}>
-        {children}
+        {!loading && children}
         </AuthContext.Provider>
     )
 }

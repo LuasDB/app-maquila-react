@@ -1,17 +1,24 @@
-import { X, Users, UserCircle, Package, ShoppingCart, FileText, LogOut, Home } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { X, Users, UserCircle, Package, ShoppingCart, FileText, LogOut, Home, WindArrowDown } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 
-const Sidebar = ({ isOpen, toggleSidebar, activeModule, setActiveModule }) => {
+const Sidebar = ({ isOpen, toggleSidebar, activeModule }) => {
+    const navigate = useNavigate()
     const { user, logout } = useAuth()
 
     const menuItems = [
-        { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'usuarios', label: 'Usuarios', icon: Users },
-        { id: 'clientes', label: 'Clientes', icon: UserCircle },
-        { id: 'maquila', label: 'Maquila', icon: Package },
-        { id: 'ventas', label: 'Ventas', icon: ShoppingCart },
-        { id: 'reportes', label: 'Reportes', icon: FileText },
+        { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
+        { id: 'usuarios', label: 'Usuarios', icon: Users, path: '/usuarios' },
+        { id: 'clientes', label: 'Clientes', icon: UserCircle, path: '/clientes' },
+        { id: 'maquila', label: 'Maquila', icon: Package, path: '/maquila' },
+        { id: 'ventas', label: 'Ventas', icon: ShoppingCart, path: '/ventas' },
+        { id: 'reportes', label: 'Reportes', icon: FileText, path: '/reportes' },
     ]
+
+    const handleNavigation = (path)=>{
+        navigate(path)
+        if(window.innerWidth < 1024 ) toggleSidebar()
+    }
 
     return (
         <>
@@ -55,13 +62,13 @@ const Sidebar = ({ isOpen, toggleSidebar, activeModule, setActiveModule }) => {
 
                 <nav className="flex-1 overflow-y-auto py-4 ">
                     {menuItems.map((item) => {
-                    const Icon = item.icon;
+                    const Icon = item.icon 
                     return (
                         <button
                         key={item.id}
                         onClick={() => {
-                            setActiveModule(item.id);
-                            if (window.innerWidth < 1024) toggleSidebar();
+                            handleNavigation(item.id) 
+                            if (window.innerWidth < 1024) toggleSidebar() 
                         }}
                         className={`
                             w-full flex items-center space-x-3 px-6 py-3 text-left transition-colors cursor-pointer
@@ -74,7 +81,7 @@ const Sidebar = ({ isOpen, toggleSidebar, activeModule, setActiveModule }) => {
                         <Icon className="w-5 h-5" />
                         <span>{item.label}</span>
                         </button>
-                    );
+                    ) 
                     })}
                 </nav>
             
