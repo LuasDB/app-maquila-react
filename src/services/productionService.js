@@ -98,6 +98,18 @@ const productionService = {
         }
     },
 
+    // Registrar entrega de corte
+    async registerCuttingReturn(id, returnData) {
+        try {
+        const response = await apiServices.post('/production/' + id + '/cutting/return', returnData);
+        return response.data;
+        } catch (error) {
+        const message = error.response?.data?.message ||
+            'Error al registrar entrega de corte '
+            throw new Error(message)
+        }
+    },
+
     // Registrar salida a maquila
     async registerSewing(id, sewingData) {
         try {
@@ -168,7 +180,18 @@ const productionService = {
             'Error al Registrar entrega de terminado '
             throw new Error(message)
         }
+    },
+    // Cerrar etapa manualmente
+    async closeStage(id, stage, closeData) {
+        try {
+        const response = await apiServices.post('/production/' + id + '/' + stage + '/close', closeData);
+        return response.data;
+        } catch (error) {
+        const message = error.response?.data?.message ||
+            'Error al cerrar la etapa '
+            throw new Error(message)
+        }
     }
-};
+}
 
-export default productionService;
+export default productionService

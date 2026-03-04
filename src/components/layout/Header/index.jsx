@@ -7,6 +7,7 @@ const Header = ({ toggleSidebar, activeModule }) => {
         dashboard: 'Dashboard',
         usuarios: 'Gestión de Usuarios',
         clientes: 'Gestión de Clientes',
+        productos: 'Gestion de Productos',
         maquila: 'Control de Maquila',
         ventas: 'Ventas y Cobranza',
         reportes: 'Reportes'

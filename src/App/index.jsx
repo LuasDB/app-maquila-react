@@ -11,6 +11,7 @@ import Dashboard from '@/pages/Dashboard'
 import UsersList from '@/pages/Users/UsersList'
 import CustomersList from '@/pages/Customers/CustomersList'
 import ProductionList from '@/pages/Production/ProductionList'
+import ProductsList from "@/pages/Products/ProductsList"
 
 const ProtectedRoute = ({ children })=>{
   const { isAuthenticated } = useAuth()
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="usuarios" element={<UsersList />} />
             <Route path="clientes" element={<CustomersList />} />
             <Route path="maquila" element={<ProductionList />} />
+            <Route path="productos" element={<ProductsList />} />
 
             {/* Más rutas... */}
 

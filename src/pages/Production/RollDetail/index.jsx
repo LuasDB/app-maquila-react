@@ -4,6 +4,7 @@ import productionService from '@/services/productionService'
 import Button from '@/components/common/Button' 
 import Modal from '@/components/common/Modal' 
 import CuttingForm from '../CuttingForm' 
+import CuttingReturnForm from '../CuttingReturnForm' 
 import SewingForm from '../SewingForm' 
 import SewingReturnForm from '../SewingReturnForm' 
 import LaundryForm from '../LaundryForm' 
@@ -15,6 +16,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
     const [roll, setRoll] = useState(null) 
     const [loading, setLoading] = useState(true) 
     const [activeModal, setActiveModal] = useState(null) 
+    const [closeStageTarget, setCloseStageTarget] = useState(null) 
 
     useEffect(() => {
         loadRoll() 
@@ -38,6 +40,9 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             case 'cutting':
             await productionService.registerCutting(rollId, data) 
             break 
+            case 'cuttingReturn':
+            await productionService.registerCuttingReturn(rollId, data) 
+            break 
             case 'sewing':
             await productionService.registerSewing(rollId, data) 
             break 
@@ -55,6 +60,9 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             break 
             case 'finishingReturn':
             await productionService.registerFinishingReturn(rollId, data) 
+            break 
+            case 'closeStage':
+            await productionService.closeStage(rollId, data.stage, data) 
             break 
             default:
             break 
@@ -75,14 +83,17 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         ) 
     }
 
-    const getProcessStatus = (process) => {
+    const getProcessStatus = (process, processType) => {
         if (process.completed) return 'completed' 
+        if (processType === 'cutting') {
+            if (process.pieces > 0 || process.piecesDelivered > 0) return 'in_progress'
+        }
         if (process.piecesDelivered > 0) return 'in_progress' 
         return 'pending' 
     } 
 
     const ProcessCard = ({ icon: Icon, title, process, processType, canStart, onAction }) => {
-        const status = getProcessStatus(process) 
+        const status = getProcessStatus(process, processType) 
         
         const statusColors = {
         pending: 'bg-gray-100 border-gray-300',
@@ -122,20 +133,38 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             </div>
             ) : (
             <div className="space-y-2 text-sm mb-3">
-                {processType === 'cutting' && process.completed && (
+                {processType === 'cutting' && (process.pieces > 0 || process.piecesDelivered > 0) && (
                 <>
+                    {process.cutterName && (
                     <div className="flex justify-between">
-                    <span className="text-gray-600">Piezas:</span>
-                    <span className="font-semibold text-gray-900">{process.pieces}</span>
+                    <span className="text-gray-600">Cortador:</span>
+                    <span className="font-semibold text-gray-900 text-xs">{process.cutterName}</span>
                     </div>
+                    )}
                     <div className="flex justify-between">
                     <span className="text-gray-600">Producto:</span>
-                    <span className="font-semibold text-gray-900">{process.productType}</span>
+                    <span className="font-semibold text-gray-900 text-xs">{process.productName || process.productType}</span>
                     </div>
                     <div className="flex justify-between">
-                    <span className="text-gray-600">Talla:</span>
-                    <span className="font-semibold text-gray-900">{process.size}</span>
+                    <span className="text-gray-600">Solicitadas:</span>
+                    <span className="font-semibold text-gray-900">{process.pieces || process.piecesDelivered || process.pieces}</span>
                     </div>
+                    <div className="flex justify-between">
+                    <span className="text-gray-600">Recibidas:</span>
+                    <span className={"font-semibold " + (process.completed ? "text-green-600" : "text-blue-600")}>{process.piecesReturned || (process.completed ? process.pieces : 0)}</span>
+                    </div>
+                    {process.piecesPending > 0 && (
+                    <div className="flex justify-between">
+                        <span className="text-gray-600">Pendientes:</span>
+                        <span className="font-semibold text-orange-600">{process.piecesPending}</span>
+                    </div>
+                    )}
+                    {process.cutterCost > 0 && (
+                    <div className="flex justify-between">
+                    <span className="text-gray-600">Costo:</span>
+                    <span className="font-semibold text-gray-900">${process.cutterCost.toLocaleString("es-MX")}</span>
+                    </div>
+                    )}
                 </>
                 )}
 
@@ -191,8 +220,28 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             </Button>
             )}
 
+            {/* Boton cerrar etapa - visible solo despues de al menos una entrega parcial */}
+            {!process.completed && process.piecesReturned > 0 && process.piecesPending > 0 && onAction && (
+            <Button
+                variant="danger"
+                onClick={(e) => { e.stopPropagation(); setCloseStageTarget(processType); setActiveModal('closeStage') }}
+                className="w-full text-xs mt-2"
+            >
+                Cerrar Etapa
+            </Button>
+            )}
+
+            {/* Indicador de cierre manual */}
+            {process.closedManually && (
+            <div className="mt-2 pt-2 border-t border-gray-300">
+                <p className="text-xs text-amber-600 font-medium">Cerrada manualmente</p>
+                {process.closeReason && <p className="text-xs text-gray-500 mt-1">{process.closeReason}</p>}
+                {process.piecesLost > 0 && <p className="text-xs text-red-500">Piezas perdidas: {process.piecesLost}</p>}
+            </div>
+            )}
+
             {/* Mostrar entregas parciales */}
-            {processType !== 'cutting' && process.returns && process.returns.length > 0 && (
+            {process.returns && process.returns.length > 0 && (
             <div className="mt-3 pt-3 border-t border-gray-300">
                 <p className="text-xs font-medium text-gray-700 mb-2">Entregas:</p>
                 <div className="space-y-1">
@@ -259,7 +308,13 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             process={roll.cutting}
             processType="cutting"
             canStart={true}
-            onAction={() => !roll.cutting.completed && setActiveModal('cutting')}
+            onAction={() => {
+                if (!roll.cutting.pieces && !roll.cutting.piecesDelivered) {
+                setActiveModal('cutting') 
+                } else if (!roll.cutting.completed) {
+                setActiveModal('cuttingReturn') 
+                }
+            }}
             />
 
             <ProcessCard
@@ -383,6 +438,19 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         </Modal>
 
         <Modal
+            isOpen={activeModal === 'cuttingReturn'}
+            onClose={() => setActiveModal(null)}
+            title="Registrar Entrega de Corte"
+            size="md"
+        >
+            <CuttingReturnForm
+            roll={roll}
+            onSubmit={(data) => handleProcessSubmit('cuttingReturn', data)}
+            onCancel={() => setActiveModal(null)}
+            />
+        </Modal>
+
+        <Modal
             isOpen={activeModal === 'sewing'}
             onClose={() => setActiveModal(null)}
             title="Registrar Salida a Maquila"
@@ -459,8 +527,23 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             onCancel={() => setActiveModal(null)}
             />
         </Modal>
+        <Modal
+            isOpen={activeModal === 'closeStage'}
+            onClose={() => { setActiveModal(null); setCloseStageTarget(null) }}
+            title={'Cerrar Etapa' + (closeStageTarget ? ' - ' + ({cutting:'Corte',sewing:'Maquila',laundry:'Lavanderia',finishing:'Terminado'}[closeStageTarget] || '') : '')}
+            size="md"
+        >
+            {closeStageTarget && (
+            <CloseStageForm
+                roll={roll}
+                stage={closeStageTarget}
+                onSubmit={(data) => handleProcessSubmit('closeStage', { ...data, stage: closeStageTarget })}
+                onCancel={() => { setActiveModal(null); setCloseStageTarget(null) }}
+            />
+            )}
+        </Modal>
         </div>
     ) 
 } 
 
-export default RollDetail 
+export default RollDetail

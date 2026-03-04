@@ -19,6 +19,7 @@ const AdminLayout = () => {
     if (path.includes('maquila')) return 'maquila' 
     if (path.includes('ventas')) return 'ventas' 
     if (path.includes('reportes')) return 'reportes' 
+    if (path.includes('productos')) return 'productos' 
     return 'dashboard' 
   }
   const activeModule = getActiveModule()
