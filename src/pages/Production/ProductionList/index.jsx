@@ -41,7 +41,7 @@
         setRolls(response.data);
         } catch (error) {
         setError(error.message);
-        console.error('Error al cargar rollos:', error);
+        console.error('Error al cargar Cortes:', error);
         } finally {
         setLoading(false);
         }
@@ -139,7 +139,7 @@
     if (loading) {
         return (
         <div className="flex items-center justify-center h-64">
-            <div className="text-gray-600">Cargando rollos...</div>
+            <div className="text-gray-600">Cargando Cortes...</div>
         </div>
         );
     }
@@ -151,7 +151,7 @@
             <div className="bg-white rounded-lg shadow p-4">
             <div className="flex items-center justify-between">
                 <div>
-                <p className="text-sm text-gray-600">Total Rollos</p>
+                <p className="text-sm text-gray-600">Total Cortes</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                 </div>
                 <Package className="w-8 h-8 text-blue-500" />
@@ -239,13 +239,13 @@
 
                 <Button variant="primary" onClick={handleCreate}>
                 <Plus className="w-5 h-5 mr-2 inline" />
-                Nuevo Rollo
+                Nuevo Corte
                 </Button>
             </div>
             </div>
         </div>
 
-        {/* Tabla de rollos */}
+        {/* Tabla de Cortes */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -253,13 +253,12 @@
                 <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Folio</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo Producto</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Talla</th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Corte</th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Maquila</th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Lavandería</th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Terminado</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inversión</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Costo/Pza</th>
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Costo/Pza</th> */}
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
                 </tr>
@@ -268,7 +267,7 @@
                 {filteredRolls.length === 0 ? (
                     <tr>
                     <td colSpan="11" className="px-6 py-8 text-center text-gray-500">
-                        No se encontraron rollos
+                        No se encontraron Cortes
                     </td>
                     </tr>
                 ) : (
@@ -278,10 +277,7 @@
                         {roll.folio}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">
-                        {roll.cutting.productType || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                        {roll.cutting.size || '-'}
+                        {`${roll.cutting.productType || '-'} talla ${roll.cutting.size}`} 
                         </td>
                         <td className="px-6 py-4 text-center text-sm">
                         {roll.cutting.completed ? (
@@ -326,12 +322,12 @@
                         <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                         ${roll.summary.totalInvested.toLocaleString('es-MX')}
                         </td>
-                        <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                        {/* <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                         {roll.summary.costPerPiece > 0 
                             ? `$${roll.summary.costPerPiece.toFixed(2)}`
                             : '-'
                         }
-                        </td>
+                        </td> */}
                         <td className="px-6 py-4">
                         {getStatusBadge(roll.summary.currentStatus)}
                         </td>
@@ -363,7 +359,7 @@
         <Modal
             isOpen={isCreateModalOpen}
             onClose={() => setIsCreateModalOpen(false)}
-            title={selectedRoll ? 'Editar Rollo' : 'Nuevo Rollo'}
+            title={selectedRoll ? 'Editar Corte' : 'Nuevo Corte'}
             size="md"
         >
             <RollForm
@@ -380,7 +376,7 @@
             setIsDetailModalOpen(false);
             setSelectedRoll(null);
             }}
-            title="Detalle del Rollo"
+            title="Detalle del Corte"
             size="xl"
         >
             {selectedRoll && (

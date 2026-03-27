@@ -63,6 +63,7 @@ const CuttingForm = ({ roll, onSubmit, onCancel }) => {
 
   const handleSubmit = () => {
     console.log(formData)
+    
     if (validate()) onSubmit({...formData,updatedAt: new Date().toISOString()})
   }
 

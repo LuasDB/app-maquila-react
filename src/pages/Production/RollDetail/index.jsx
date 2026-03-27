@@ -11,6 +11,7 @@ import LaundryForm from '../LaundryForm'
 import LaundryReturnForm from '../LaundryReturnForm' 
 import FinishingForm from '../FinishingForm' 
 import FinishingReturnForm from '../FinishingReturnForm' 
+import CloseStageForm from '../CloseStorageForm'
 
 const RollDetail = ({ rollId, onClose, onUpdate }) => {
     const [roll, setRoll] = useState(null) 
@@ -28,7 +29,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         const response = await productionService.getById(rollId) 
         setRoll(response.data) 
         } catch (error) {
-        console.error('Error al cargar rollo:', error) 
+        console.error('Error al cargar corte:', error) 
         } finally {
         setLoading(false) 
         }
@@ -281,7 +282,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
                 <p className="text-lg font-semibold">{roll.fabric.meters} m</p>
             </div>
             <div>
-                <p className="text-xs text-blue-100">Costo Rollo</p>
+                <p className="text-xs text-blue-100">Costo Corte</p>
                 <p className="text-lg font-semibold">${roll.fabric.cost.toLocaleString('es-MX')}</p>
             </div>
             <div>
@@ -304,7 +305,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <ProcessCard
             icon={Scissors}
-            title="1. Corte"
+            title="1. Recorte"
             process={roll.cutting}
             processType="cutting"
             canStart={true}
@@ -394,9 +395,9 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             </div>
         )}
 
-        {/* Información del Rollo */}
+        {/* Información del Corte */}
         <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3">Información del Rollo</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">Información del Corte</h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
                 <span className="text-gray-600">Proveedor:</span>
@@ -427,7 +428,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         <Modal
             isOpen={activeModal === 'cutting'}
             onClose={() => setActiveModal(null)}
-            title="Registrar Corte"
+            title="Registrar Recorte"
             size="md"
         >
             <CuttingForm
@@ -440,7 +441,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         <Modal
             isOpen={activeModal === 'cuttingReturn'}
             onClose={() => setActiveModal(null)}
-            title="Registrar Entrega de Corte"
+            title="Registrar Entrega de Recorte"
             size="md"
         >
             <CuttingReturnForm
@@ -546,4 +547,4 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
     ) 
 } 
 
-export default RollDetail
+export default RollDetail 

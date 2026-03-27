@@ -83,7 +83,7 @@ const RollForm = ({ roll, onSubmit, onCancel }) => {
             />
 
             <Input
-                label="Costo Total del Rollo"
+                label="Costo Total del Corte"
                 name="cost"
                 type="number"
                 value={formData.cost}
@@ -136,7 +136,7 @@ const RollForm = ({ roll, onSubmit, onCancel }) => {
             Cancelar
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-            {roll ? 'Actualizar' : 'Crear'} Rollo
+            {roll ? 'Actualizar' : 'Crear'} Corte
             </Button>
         </div>
         </div>
