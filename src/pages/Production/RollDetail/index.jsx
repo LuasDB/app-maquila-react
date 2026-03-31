@@ -27,6 +27,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
         try {
         setLoading(true) 
         const response = await productionService.getById(rollId) 
+        console.log('Recibido del corte:',response.data)
         setRoll(response.data) 
         } catch (error) {
         console.error('Error al cargar corte:', error) 
@@ -148,7 +149,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
                     </div>
                     <div className="flex justify-between">
                     <span className="text-gray-600">Solicitadas:</span>
-                    <span className="font-semibold text-gray-900">{process.pieces || process.piecesDelivered || process.pieces}</span>
+                    <span className="font-semibold text-gray-900">{ process.piecesDelivered || process.pieces}</span>
                     </div>
                     <div className="flex justify-between">
                     <span className="text-gray-600">Recibidas:</span>
@@ -375,7 +376,7 @@ const RollDetail = ({ rollId, onClose, onUpdate }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                 <p className="text-sm text-green-700">Piezas Cortadas</p>
-                <p className="text-2xl font-bold text-green-900">{roll.cutting.pieces}</p>
+                <p className="text-2xl font-bold text-green-900">{roll.cutting.piecesDelivered}</p>
                 </div>
                 <div>
                 <p className="text-sm text-green-700">Piezas Finales</p>

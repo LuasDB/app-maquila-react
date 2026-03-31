@@ -9,7 +9,7 @@ const SewingForm = ({ roll, onSubmit, onCancel }) => {
         piecesDelivered: roll.cutting.pieces.toString(),
         pricePerPiece: '',
         deliveryDate: new Date().toISOString().split('T')[0],
-        estimatedReturnDate: ''
+        
     }) 
 
     const [errors, setErrors] = useState({}) 
@@ -140,13 +140,7 @@ const SewingForm = ({ roll, onSubmit, onCancel }) => {
                 required
             />
 
-            <Input
-                label="Fecha Estimada de Retorno"
-                name="estimatedReturnDate"
-                type="date"
-                value={formData.estimatedReturnDate}
-                onChange={handleChange}
-            />
+            
             </div>
 
             {/* Resumen de Costos */}

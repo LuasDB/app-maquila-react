@@ -29,7 +29,7 @@ const CuttingReturnForm = ({ roll, onSubmit, onCancel }) => {
   }
 
   const handleSubmit = () => {
-    console.log(formData)
+    console.log('[DATOS RETORNO CUTTING]',formData)
     if (validate()) onSubmit(formData)
   }
 
