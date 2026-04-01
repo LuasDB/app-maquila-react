@@ -89,6 +89,8 @@ const productionService = {
     // Registrar corte
     async registerCutting(id, cuttingData) {
         try {
+            console.log('[CUTTING DATA1]:',cuttingData) 
+            
         const response = await apiServices.post(`/production/${id}/cutting`, cuttingData);
         return response.data;
         } catch (error) {
@@ -100,6 +102,7 @@ const productionService = {
 
     // Registrar entrega de corte
     async registerCuttingReturn(id, returnData) {
+        console.log('REGISTRO CUTTING')
         try {
         const response = await apiServices.post('/production/' + id + '/cutting/return', returnData);
         return response.data;
@@ -124,6 +127,7 @@ const productionService = {
 
     // Registrar entrega de maquila
     async registerSewingReturn(id, returnData) {
+        console.log('[REGISTRO SEWING]')
         try {
         const response = await apiServices.post(`/production/${id}/sewing/return`, returnData);
         return response.data;
@@ -149,6 +153,7 @@ const productionService = {
     // Registrar entrega de lavandería
     async registerLaundryReturn(id, returnData) {
         try {
+            console.log('[LAUNDRY]')
         const response = await apiServices.post(`/production/${id}/laundry/return`, returnData);
         return response.data;
         } catch (error) {
@@ -173,6 +178,7 @@ const productionService = {
     // Registrar entrega de terminado
     async registerFinishingReturn(id, returnData) {
         try {
+            console.log('[FINISHING]')
         const response = await apiServices.post(`/production/${id}/finishing/return`, returnData);
         return response.data;
         } catch (error) {
@@ -184,6 +190,10 @@ const productionService = {
     // Cerrar etapa manualmente
     async closeStage(id, stage, closeData) {
         try {
+            console.group() 
+            console.log('[STAGE]',stage)
+            console.log('[DATA]',closeData)
+            console.groupEnd()
         const response = await apiServices.post('/production/' + id + '/' + stage + '/close', closeData);
         return response.data;
         } catch (error) {
