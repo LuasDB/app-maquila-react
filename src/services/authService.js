@@ -22,7 +22,6 @@ const authService ={
     },
     async login(email,password){
         try {
-            console.log('Enviados',email,password)
 
             const { data } = await apiServices.post('/auth/login',{email,password})
             if(data.success){
