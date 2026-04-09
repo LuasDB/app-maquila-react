@@ -7,13 +7,13 @@ const Sidebar = ({ isOpen, toggleSidebar, activeModule }) => {
   const { user, logout } = useAuth()
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
+    // { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
+    { id: "reportes", label: "Reportes", icon: FileText, path: "/reportes" },
     { id: "usuarios", label: "Usuarios", icon: Users, path: "/usuarios" },
     { id: "clientes", label: "Clientes", icon: UserCircle, path: "/clientes" },
     { id: "productos", label: "Productos", icon: Tag, path: "/productos" },
     { id: "maquila", label: "Maquila", icon: Package, path: "/maquila" },
     // { id: "ventas", label: "Ventas", icon: ShoppingCart, path: "/ventas" },
-    { id: "reportes", label: "Reportes", icon: FileText, path: "/reportes" },
   ]
 
   const handleNavigation = (path) => {

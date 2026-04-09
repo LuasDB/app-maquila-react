@@ -12,7 +12,7 @@ const CuttingForm = ({ roll, onSubmit, onCancel }) => {
     productId: "",
     productName: "",
     productType: "",
-    size: "",
+    // size: "",
     notes: ""
   })
 
@@ -97,14 +97,14 @@ const CuttingForm = ({ roll, onSubmit, onCancel }) => {
           {errors.productId && <p className="text-red-500 text-sm mt-1">{errors.productId}</p>}
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">Talla <span className="text-red-500">*</span></label>
           <select name="size" value={formData.size} onChange={handleChange} disabled={!selectedProduct} className={"w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed " + (errors.size ? "border-red-500" : "border-gray-300")}>
             <option value="">Seleccionar talla...</option>
             {selectedProduct?.sizes?.map((s, i) => <option key={i} value={s.label}>{s.label}</option>)}
           </select>
           {errors.size && <p className="text-red-500 text-sm mt-1">{errors.size}</p>}
-        </div>
+        </div> */}
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">Notas / Observaciones</label>
