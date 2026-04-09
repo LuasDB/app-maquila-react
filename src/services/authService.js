@@ -1,6 +1,7 @@
 import apiServices from '@/api/apiServices'
 import { saveToken,saveUser,clearStorage } from '@/utils/storage'
 
+
 const authService ={
     
     async register(userData){
@@ -39,7 +40,7 @@ const authService ={
     },
     logout(){
         clearStorage()
-        window.location.href('/login')
+        window.location.href='/login'
     },
     isAuthenticated(){
         return !!localStorage.getItem('token')

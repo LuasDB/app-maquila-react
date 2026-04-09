@@ -29,7 +29,7 @@ const Login = ()=>{
 
         try {
             await login(formData.email,formData.password)
-            navigate('/dashboard')
+            navigate('/reportes')
         } catch (error) {
             setError(error.message || 'Error al iniciar sesión')
         }finally{
