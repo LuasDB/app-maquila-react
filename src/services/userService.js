@@ -44,6 +44,7 @@ const userService = {
     },
     async update(id, userData) {
     try {
+        console.log('[ENDPOINT UPDATE]',`/users/${id}`)
         const {data} = await apiServices.patch(`/users/${id}`, userData)
         return data
         } catch (error) {

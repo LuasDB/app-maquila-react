@@ -87,7 +87,7 @@ const UsersList = () => {
   const handleSubmit = async (formData) => {
     try {
       if (selectedUser) {
-        console.log('Useuario modificado',selectedUser)
+        console.log('Useuario modificado',selectedUser._id)
         await userService.update(selectedUser._id, {...formData,updatedAt:new Date().toISOString()}) 
       } else {
         await userService.create({...formData, createdAt:new Date().toISOString()}) 
@@ -97,11 +97,7 @@ const UsersList = () => {
     } catch (error) {
       alert('Error: ' + error.message) 
     }
-    if (selectedUser) {
-      await userService.update(selectedUser.id, formData) 
-    } else {
-      await userService.create(formData) 
-    }
+   
     setIsModalOpen(false) 
     loadUsers() 
   } 
